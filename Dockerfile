@@ -22,8 +22,8 @@ USER 0
 # renovate: datasource=repology depName=ubi_8/curl versioning=loose
 ENV CURL_VERSION="7.61.1-25.el8_7.3"
 
-# renovate: datasource=github-releases depName=gh lookupName=cli/cli versioning=loose
-GH_CLI_VERSION="2.0.0"
+# renovate: datasource=github-releases depName=cli/cli versioning=loose
+ENV GH_CLI_VERSION="2.0.0"
 
 RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
     dnf update -y && \
@@ -33,7 +33,6 @@ RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
 RUN \
     TEMP_DIR="$(mktemp -d)"; \
     cd "${TEMP_DIR}"; \
-    GH_CLI_VERSION="2.0.0"; \
     GH_ARCH="linux_amd64"; \
     GH_TGZ="gh_${GH_CLI_VERSION}_${GH_ARCH}.tar.gz"; \
     GH_TGZ_URL="https://github.com/cli/cli/releases/download/v${GH_CLI_VERSION}/${GH_TGZ}"; \
@@ -52,9 +51,6 @@ RUN \
     useradd -u 10001 -G wheel,root -d /home/user --shell /bin/bash -m user && \
     # Setup $PS1 for a consistent and reasonable prompt
     echo "export PS1='\W \`git branch --show-current 2>/dev/null | sed -r -e \"s@^(.+)@\(\1\) @\"\`$ '" >> /home/user/.bashrc && \
-    # Copy the global git configuration to user config as global /etc/gitconfig
-    #  file may be overwritten by a mounted file at runtime
-    cp /etc/gitconfig /home/user/.gitconfig && \
     # Set permissions on /etc/passwd and /home to allow arbitrary users to write
     chgrp -R 0 /home && \
     chmod -R g=u /etc/passwd /etc/group /home && \
