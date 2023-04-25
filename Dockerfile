@@ -23,7 +23,7 @@ USER 0
 ENV CURL_VERSION="7.61.1-25.el8_7.3"
 
 # renovate: datasource=github-releases depName=cli/cli versioning=loose
-ENV GH_CLI_VERSION="2.0.0"
+ENV GH_CLI_VERSION="v2.28.0"
 
 RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
     dnf update -y && \
