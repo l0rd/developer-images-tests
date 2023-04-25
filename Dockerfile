@@ -19,54 +19,30 @@ LABEL io.openshift.expose-services=""
 
 USER 0
 
+# renovate: datasource=repology depName=ubi_8/curl versioning=loose
+ENV CURL_VERSION="7.61.1-25.el8_7.3"
+
+# renovate: datasource=github-releases depName=gh lookupName=cli/cli versioning=loose
+GH_CLI_VERSION="2.0.0"
+
 RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
     dnf update -y && \
-    dnf install -y bash curl diffutils git git-lfs iproute jq less lsof man nano procps p7zip p7zip-plugins \
-                   perl-Digest-SHA net-tools openssh-clients rsync socat sudo time vim wget zip && \
-                   dnf clean all
+    dnf install -y curl-"${CURL_VERSION}"
 
 ## gh-cli
 RUN \
     TEMP_DIR="$(mktemp -d)"; \
     cd "${TEMP_DIR}"; \
-    GH_VERSION="2.0.0"; \
+    GH_CLI_VERSION="2.0.0"; \
     GH_ARCH="linux_amd64"; \
-    GH_TGZ="gh_${GH_VERSION}_${GH_ARCH}.tar.gz"; \
-    GH_TGZ_URL="https://github.com/cli/cli/releases/download/v${GH_VERSION}/${GH_TGZ}"; \
-    GH_CHEKSUMS_URL="https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_checksums.txt"; \
+    GH_TGZ="gh_${GH_CLI_VERSION}_${GH_ARCH}.tar.gz"; \
+    GH_TGZ_URL="https://github.com/cli/cli/releases/download/v${GH_CLI_VERSION}/${GH_TGZ}"; \
+    GH_CHEKSUMS_URL="https://github.com/cli/cli/releases/download/v${GH_CLI_VERSION}/gh_${GH_CLI_VERSION}_checksums.txt"; \
     curl -sSLO "${GH_TGZ_URL}"; \
     curl -sSLO "${GH_CHEKSUMS_URL}"; \
-    sha256sum --ignore-missing -c "gh_${GH_VERSION}_checksums.txt" 2>&1 | grep OK; \
+    sha256sum --ignore-missing -c "gh_${GH_CLI_VERSION}_checksums.txt" 2>&1 | grep OK; \
     tar -zxvf "${GH_TGZ}"; \
-    mv "gh_${GH_VERSION}_${GH_ARCH}"/bin/gh /usr/local/bin/; \
-    cd -; \
-    rm -rf "${TEMP_DIR}"
-
-## ripgrep
-RUN \
-    TEMP_DIR="$(mktemp -d)"; \
-    cd "${TEMP_DIR}"; \
-    RG_VERSION="13.0.0"; \
-    RG_ARCH="x86_64-unknown-linux-musl"; \
-    RG_TGZ="ripgrep-${RG_VERSION}-${RG_ARCH}.tar.gz"; \
-    RG_TGZ_URL="https://github.com/BurntSushi/ripgrep/releases/download/${RG_VERSION}/${RG_TGZ}"; \
-    curl -sSLO "${RG_TGZ_URL}"; \
-    tar -zxvf "${RG_TGZ}"; \
-    mv "ripgrep-${RG_VERSION}-${RG_ARCH}"/rg /usr/local/bin/; \
-    cd -; \
-    rm -rf "${TEMP_DIR}"
-
-## bat
-RUN \
-    TEMP_DIR="$(mktemp -d)"; \
-    cd "${TEMP_DIR}"; \
-    BAT_VERSION="0.18.3"; \
-    BAT_ARCH="x86_64-unknown-linux-musl"; \
-    BAT_TGZ="bat-v${BAT_VERSION}-${BAT_ARCH}.tar.gz"; \
-    BAT_TGZ_URL="https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_TGZ}"; \
-    curl -sSLO "${BAT_TGZ_URL}"; \
-    tar -zxvf "${BAT_TGZ}"; \
-    mv "bat-v${BAT_VERSION}-${BAT_ARCH}"/bat /usr/local/bin/; \
+    mv "gh_${GH_CLI_VERSION}_${GH_ARCH}"/bin/gh /usr/local/bin/; \
     cd -; \
     rm -rf "${TEMP_DIR}"
 
