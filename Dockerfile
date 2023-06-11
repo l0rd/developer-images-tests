@@ -20,7 +20,7 @@ LABEL io.openshift.expose-services=""
 USER 0
 
 # renovate: datasource=repology depName=ubi_8/curl versioning=loose
-ENV CURL_VERSION="7.61.1-25.el8_7.3"
+ENV CURL_VERSION="7.61.1-30.el8_8.2"
 
 # renovate: datasource=github-releases depName=cli/cli versioning=loose
 ENV GH_CLI_VERSION="v2.30.0"
