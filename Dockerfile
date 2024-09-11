@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.3-labs
+# syntax=docker/dockerfile:1.10-labs
 
 # https://registry.access.redhat.com/ubi8/ubi
 FROM registry.access.redhat.com/ubi8/ubi:8.8-854
